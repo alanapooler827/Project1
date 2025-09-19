@@ -1,0 +1,24 @@
+[
+  {
+    "objectID": "pages/overview.html",
+    "href": "pages/overview.html",
+    "title": "Overview",
+    "section": "",
+    "text": "This portion of the project will go here: ‘Lastly, we’ll write up a document via quarto (just like we did with the homework) to describe our thought process and give examples of using the functions.’",
+    "crumbs": [
+      "Home",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Project 1 Index",
+    "section": "",
+    "text": "Will put table of contents and any other relevant info here",
+    "crumbs": [
+      "Home",
+      "Project 1 Index"
+    ]
+  }
+]
