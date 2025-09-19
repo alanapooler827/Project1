@@ -1,0 +1,6 @@
+---
+title: "Project 1 Index"
+format: html
+---
+
+# Will put table of contents and any other relevant info here

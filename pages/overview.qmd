@@ -1,0 +1,7 @@
+---
+title: "Overview"
+format: html
+---
+
+This portion of the project will go here:
+'Lastly, we’ll write up a document via quarto (just like we did with the homework) to describe our thought process and give examples of using the functions.'
