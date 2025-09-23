@@ -1,0 +1,93 @@
+---
+title: "Data Processing"
+format: html
+---
+
+Add helper function to turn result of API call to tibble
+
+### Function to query the API with user input
+
+```{r}
+query <- function(
+    year = 2022,
+    num_vars = c('AGEP', 'PWGTP'),
+    cat_vars = 'SEX',
+    geo_level = 'ALL',
+    subset = NULL
+) {
+  
+  # Stop if year is not between 2010 and 2022
+  if (!year %in% 2010:2022)
+    stop('Year must be between 2010 and 2022.')
+  
+  # Define valid numeric variables
+  valid_num <- c('AGEP', 'PWGTP', 'GEP', 'GASP', 'GRPIP', 'JWAP', 'JWDP', 'JWMNP')
+  
+  # Stop if num_vars input is valid
+  if (!all(num_vars %in% valid_num))
+    stop('Invalid input for numeric variables.')
+  # Stop if PWGTP is not returned
+  if (!'PWGTP' %in% num_vars)
+    stop('PWGTP must be returned.')
+  # Stop if less than 2 numeric variables are returned
+  if (length(num_vars) < 2)
+    stop('At least one numeric variable aside from PWGTP must be returned.')
+  
+  # Define valid categorical variables
+  valid_cat <- c('FER', 'HHL', 'HISPEED', 'JWTRNS', 'SCH', 'SCHL', 'SEX')
+  
+  # Stop if cat_vars input is invalid
+  if (!all(cat_vars %in% valid_cat))
+    stop('Invalid input for categorical variables.')
+  # Stop if no categorical variables are returned
+  if (length(cat_vars) < 1)
+    stop('At least one categorical variable must be returned.')
+  
+  # Define valid inputs for geography
+  valid_geo <- c('All', 'Region', 'Division', 'State')
+  
+  # Stop if geo_level input is not valid
+  if (!geo_level %in% valid_geo)
+    stop('Invalid input for geography level.')
+  
+  # Base URL
+  url <- 'https://api.census.gov/data/'
+  # Dataset we want to query
+  dataset <- 'acs/acs1/pums'
+  vars <- c(num_vars, cat_vars)
+  
+  # Build URL with user inputs
+  api_url <- paste0(
+    url, "/", year, "/", dataset,
+    "?get=", paste(vars, collapse = ",")
+  )
+  
+  # Geography level subsetting
+  if (!is.null(subset)) {
+    api_url <- paste0(api_url, '&for=', subset)
+  } else {
+    if (geo_level == 'Region')
+      api_url <- paste0(api_url, '&for=region:*')
+  } else if (geo_level = 'Division') {
+    api_url <- paste0(api_url, '&for=division:*')
+  } else if (geo_level = 'State') {
+    api_url <- paste0(api_url, '&for=state:*')
+  }
+  
+  # Query the API
+  request <- GET(api_url)
+  
+  # Call helper function written in step 2 to turn query results into tibble
+  # replace 'to_tibble' with name of helper function
+  data <- to_tibble(request)
+  
+  #TO BE ADDED: ensure data types are correct
+  
+  # For summary function
+  class(data) <- c("census", class(data))
+  
+  return(data)
+}
+```
+
+Add function to specify multiple years of survey data & generic function to summarize
