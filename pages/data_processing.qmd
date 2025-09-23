@@ -1,13 +1,22 @@
 ---
 title: "Data Processing"
 format: html
+toc: TRUE
+execute: 
+  warning: false
+  message: false
+editor_options: 
+  chunk_output_type: console
 ---
 
 ### Import necessary libraries
 ```{r}
+#libraries must be installed 
 library(readr)
 library(tidyverse)
 library(httr)
+library(tidycensus)
+library(jsonlite)
 ```
 
 save the url as a string object
@@ -22,7 +31,23 @@ id_info <- httr::GET(URL_ids)
 
 
 ### Add helper function to turn result of API call to tibble
+extracting the content portion because this is the data we will need to work with 
+```{r}
+parsed_pums_info <- fromJSON(rawToChar(id_info$content))
+col_names <- parsed_pums_info[1, ]
+data_rows <- parsed_pums_info[-1, ]
+```
 
+creating a tibble to view data more clearly
+```{r}
+pums_info <- as_tibble(data_rows)
+colnames(pums_info) <- col_names 
+```
+
+displaying tibble
+```{r}
+pums_info
+```
 ### Function to query the API with user input
 
 ```{r}
