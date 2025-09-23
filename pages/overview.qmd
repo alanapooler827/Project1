@@ -1,6 +1,8 @@
 ---
 title: "Overview"
 format: html
+editor_options: 
+  chunk_output_type: console
 ---
 
 This portion of the project will go here:
@@ -11,15 +13,33 @@ first we should load some of our packages from the tidyverse package
 library(readr) #must install first
 library(tidyverse) #must install first 
 library(httr) #must install first
+library(tidycensus) #must install first)
+library(jsonlite) #must install first 
 ```
 
 save the url as a string object
 ```{r}
-URL_ids <- "api.census.gov/data/2023/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24"
+URL_ids <- "https://api.census.gov/data/2023/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24"
+#next we will load the data from the API website so that we can use it for our project
+id_info <- httr::GET(URL_ids)
+str(id_info, max.level = 1)
 ```
 
-next we will load the data from the API website so that we can use it for our project
+extracting the content portion because this is the data we will need to work with 
 ```{r}
-id_info <- httr::GET(URL_ids)
+parsed_pums_info <- fromJSON(rawToChar(id_info$content))
+col_names <- parsed_pums_info[1, ]
+data_rows <- parsed_pums_info[-1, ]
+```
+
+creating a tibble to view data more clearly
+```{r}
+pums_info <- as_tibble(data_rows)
+colnames(pums_info) <- col_names 
+```
+
+displaying tibble
+```{r}
+pums_info
 ```
 
