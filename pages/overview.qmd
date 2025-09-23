@@ -5,3 +5,21 @@ format: html
 
 This portion of the project will go here:
 'Lastly, we’ll write up a document via quarto (just like we did with the homework) to describe our thought process and give examples of using the functions.'
+
+first we should load some of our packages from the tidyverse package
+```{r}
+library(readr) #must install first
+library(tidyverse) #must install first 
+library(httr) #must install first
+```
+
+save the url as a string object
+```{r}
+URL_ids <- "api.census.gov/data/2023/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24"
+```
+
+next we will load the data from the API website so that we can use it for our project
+```{r}
+id_info <- httr::GET(URL_ids)
+```
+
