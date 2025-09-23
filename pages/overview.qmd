@@ -8,6 +8,7 @@ editor_options:
 This portion of the project will go here:
 'Lastly, we’ll write up a document via quarto (just like we did with the homework) to describe our thought process and give examples of using the functions.'
 
+<<<<<<< HEAD
 first we should load some of our packages from the tidyverse package
 ```{r}
 library(readr) #must install first
@@ -42,4 +43,17 @@ displaying tibble
 ```{r}
 pums_info
 ```
+=======
+## Project Goal
 
+The goal of this project is to write functions that will manipulate and process data sets that come from a census API. We have created generic functions to automatically summarize and plot certain returned data.
+
+## Project Outline
+>>>>>>> 250869f09a91300ec03cf35030bf7b3fc51d3f35
+
+tibble helper function info:
+
+Function to query API:
+
+- This function allows the user to query the PUMS API with their own inputs. The user can change the year of survey, the numeric and categorical variables retrieved, and the geography level.
+- Add examples of use
