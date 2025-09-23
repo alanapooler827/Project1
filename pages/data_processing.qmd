@@ -3,7 +3,25 @@ title: "Data Processing"
 format: html
 ---
 
-Add helper function to turn result of API call to tibble
+### Import necessary libraries
+```{r}
+library(readr)
+library(tidyverse)
+library(httr)
+```
+
+save the url as a string object
+```{r}
+URL_ids <- "api.census.gov/data/2023/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24"
+```
+
+next we will load the data from the API website so that we can use it for our project
+```{r}
+id_info <- httr::GET(URL_ids)
+```
+
+
+### Add helper function to turn result of API call to tibble
 
 ### Function to query the API with user input
 
@@ -68,9 +86,9 @@ query <- function(
   } else {
     if (geo_level == 'Region')
       api_url <- paste0(api_url, '&for=region:*')
-  } else if (geo_level = 'Division') {
+  } else if (geo_level == 'Division') {
     api_url <- paste0(api_url, '&for=division:*')
-  } else if (geo_level = 'State') {
+  } else if (geo_level == 'State') {
     api_url <- paste0(api_url, '&for=state:*')
   }
   
