@@ -1,10 +1,13 @@
 ---
 title: "Project 1 Index"
 format: html
+toc: TRUE
 ---
 
 ### Table of Contents:
 
-1.  Overview
+1.  Overview: Introduction and description of workflow
 
-2.  Data Processing
+2.  Data Processing: Functions to query API and summarize data
+
+3.  investigation: Using functions to investigate data

@@ -5,57 +5,42 @@ toc: TRUE
 execute: 
   warning: false
   message: false
-editor_options: 
-  chunk_output_type: console
 ---
 
+In this notebook, we will write several functions that will allow users to query the Census API with their own inputs, and then explore the data through summary statistics. 
+
 ### Import necessary libraries
+
 ```{r}
-#libraries must be installed 
-library(readr)
 library(tidyverse)
 library(httr)
-library(tidycensus)
 library(jsonlite)
 ```
 
-save the url as a string object
+### Helper function to turn result of API call into a tibble
+
 ```{r}
-URL_ids <- "api.census.gov/data/2023/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24"
+to_tibble <- function(request) {
+  data <- fromJSON(rawToChar(request$content))
+  data <- as_tibble(data[-1, ])
+  
+  # Assign column names
+  col_names <- data[1, ]
+  colnames(data) <- col_names 
+  
+  # Return tibble
+  return(data)
+}
 ```
 
-next we will load the data from the API website so that we can use it for our project
-```{r}
-id_info <- httr::GET(URL_ids)
-```
-
-
-### Add helper function to turn result of API call to tibble
-extracting the content portion because this is the data we will need to work with 
-```{r}
-parsed_pums_info <- fromJSON(rawToChar(id_info$content))
-col_names <- parsed_pums_info[1, ]
-data_rows <- parsed_pums_info[-1, ]
-```
-
-creating a tibble to view data more clearly
-```{r}
-pums_info <- as_tibble(data_rows)
-colnames(pums_info) <- col_names 
-```
-
-displaying tibble
-```{r}
-pums_info
-```
 ### Function to query the API with user input
 
 ```{r}
-query <- function(
+query_pums <- function(
     year = 2022,
     num_vars = c('AGEP', 'PWGTP'),
     cat_vars = 'SEX',
-    geo_level = 'ALL',
+    geo_level = 'All',
     subset = NULL
 ) {
   
@@ -64,7 +49,7 @@ query <- function(
     stop('Year must be between 2010 and 2022.')
   
   # Define valid numeric variables
-  valid_num <- c('AGEP', 'PWGTP', 'GEP', 'GASP', 'GRPIP', 'JWAP', 'JWDP', 'JWMNP')
+  valid_num <- c('AGEP', 'PWGTP', 'GASP', 'GRPIP', 'JWAP', 'JWDP', 'JWMNP')
   
   # Stop if num_vars input is valid
   if (!all(num_vars %in% valid_num))
@@ -94,9 +79,10 @@ query <- function(
     stop('Invalid input for geography level.')
   
   # Base URL
-  url <- 'https://api.census.gov/data/'
-  # Dataset we want to query
+  url <- 'api.census.gov/data'
+  # Data set we want to query
   dataset <- 'acs/acs1/pums'
+  # Variables to query
   vars <- c(num_vars, cat_vars)
   
   # Build URL with user inputs
@@ -106,22 +92,31 @@ query <- function(
   )
   
   # Geography level subsetting
+  geo_map <- c(
+    Region   = "region:*",
+    Division = "division:*",
+    State    = "state:*"
+  )
+  
+  # allow users to specify subsets of geography level
   if (!is.null(subset)) {
-    api_url <- paste0(api_url, '&for=', subset)
-  } else {
-    if (geo_level == 'Region')
-      api_url <- paste0(api_url, '&for=region:*')
-  } else if (geo_level == 'Division') {
-    api_url <- paste0(api_url, '&for=division:*')
-  } else if (geo_level == 'State') {
-    api_url <- paste0(api_url, '&for=state:*')
+    if (geo_level == 'State') {
+      api_url <- paste0(api_url, '&for=state:', paste(subset, collapse = ','))
+    }
+    if (geo_level == 'Region') {
+      api_url <- paste0(api_url, '&for=region:', paste(subset, collapse = ','))
+    }
+    if (geo_level == 'Division') {
+      api_url <- paste0(api_url, '&for=division:', paste(subset, collapse = ','))
+    }
+  } else if (geo_level != 'All') {
+    api_url <- paste0(api_url, '&for=', geo_map[[geo_level]])
   }
   
   # Query the API
   request <- GET(api_url)
   
-  # Call helper function written in step 2 to turn query results into tibble
-  # replace 'to_tibble' with name of helper function
+  # Call helper function to turn query results into tibble
   data <- to_tibble(request)
   
   #TO BE ADDED: ensure data types are correct
@@ -131,6 +126,20 @@ query <- function(
   
   return(data)
 }
+```
+
+#### Test query_pums() function
+
+Without sub-setting the geography level, this function is time consuming to run.
+
+```{r}
+query_pums(
+  year = 2022,
+  num_vars = c('AGEP', 'PWGTP', 'GRPIP'),
+  cat_vars = c('SEX', 'HISPEED'),
+  geo_level = 'State',
+  subset='06'
+)
 ```
 
 Add function to specify multiple years of survey data & generic function to summarize

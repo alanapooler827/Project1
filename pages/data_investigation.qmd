@@ -1,0 +1,7 @@
+---
+title: "Census Data Investigation"
+format: html
+toc: TRUE
+---
+
+This is where we will investigate something interesting from the data using the API function and plotting/summarizing functions.
