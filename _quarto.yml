@@ -4,7 +4,8 @@ project:
   render: 
     - index.qmd
     - pages/overview.qmd
-    # will add other pages here as we go
+    - pages/data_processing.qmd
+    - pages/data_investigation.qmd
     
 website:
   title: "Project 1 Site"
@@ -20,6 +21,8 @@ website:
     contents:
       - index.qmd
       - pages/overview.qmd
+      - pages/data_processing.qmd
+      - pages/data_investigation.qmd
   page-navigation: true
   reader-mode: true
 
