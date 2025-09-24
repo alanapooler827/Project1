@@ -2,8 +2,7 @@ project:
   type: website
   output-dir: docs
   render: 
-    - index.qmd
-    - pages/overview.qmd
+    - overview.qmd
     - pages/data_processing.qmd
     - pages/data_investigation.qmd
     
@@ -12,15 +11,14 @@ website:
   navbar:
     background: primary
     left:
-      - href: index.qmd
+      - href: overview.qmd
         text: Home
   sidebar:
     style: "docked"
     search: true
     collapse-level: 1
     contents:
-      - index.qmd
-      - pages/overview.qmd
+      - overview.qmd
       - pages/data_processing.qmd
       - pages/data_investigation.qmd
   page-navigation: true

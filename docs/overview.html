@@ -8,7 +8,7 @@
 
 <meta name="dcterms.date" content="2025-09-24">
 
-<title>Project 1 Index – Project 1 Site</title>
+<title>Project Overview – Project 1 Site</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -31,7 +66,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./pages/overview.html" rel="next">
+<link href="./pages/data_processing.html" rel="next">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -92,7 +127,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link active" href="./overview.html" aria-current="page"> 
 <span class="menu-text">Home</span></a>
   </li>  
 </ul>
@@ -111,7 +146,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Project 1 Index</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./overview.html">Project Overview</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -133,14 +168,8 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Project 1 Index</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./pages/overview.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Overview</span></a>
+  <a href="./overview.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Project Overview</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -166,6 +195,8 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#table-of-contents" id="toc-table-of-contents" class="nav-link active" data-scroll-target="#table-of-contents">Table of Contents:</a></li>
+  <li><a href="#project-goal" id="toc-project-goal" class="nav-link" data-scroll-target="#project-goal">Project Goal</a></li>
+  <li><a href="#project-components" id="toc-project-components" class="nav-link" data-scroll-target="#project-components">Project Components</a></li>
   </ul>
 </nav>
     </div>
@@ -174,7 +205,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Project 1 Index</h1>
+<h1 class="title">Project Overview</h1>
 </div>
 
 
@@ -204,6 +235,44 @@ ul.task-list li input[type="checkbox"] {
 <li><p>Data Processing: Functions to query API and summarize data</p></li>
 <li><p>investigation: Using functions to investigate data</p></li>
 </ol>
+</section>
+<section id="project-goal" class="level2">
+<h2 class="anchored" data-anchor-id="project-goal">Project Goal</h2>
+<p>The goal of this project is to write functions that will manipulate and process data sets that come from a census API. We have created generic functions to automatically summarize and plot certain returned data.</p>
+</section>
+<section id="project-components" class="level2">
+<h2 class="anchored" data-anchor-id="project-components">Project Components</h2>
+<p><strong>Tibble helper function:</strong></p>
+<ul>
+<li>Add info about to_tibble helper function</li>
+<li>Add example usage</li>
+</ul>
+<p><strong>Query Census API function:</strong></p>
+<ul>
+<li><p>This function allows the user to query the PUMS API with their own inputs.</p></li>
+<li><p>The user can change the year of survey, the numeric and categorical variables retrieved, and the geography level.</p></li>
+<li><p>Example Usage:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Default Arguments</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">query_pums</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2022</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_vars =</span> <span class="fu">c</span>(<span class="st">'AGEP'</span>, <span class="st">'PWGTP'</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">cat_vars =</span> <span class="st">'SEX'</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">geo_level =</span> <span class="st">'All'</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">subset =</span> <span class="cn">NULL</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Note: it is not recommended to call query_pums() without sub-setting the geography level unless necessary. This will be time-consuming due to the size of the census data sets.</em></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specifying a geography level and subset</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">query_pums</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">geo_level =</span> <span class="st">'State'</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">subset =</span> <span class="st">'37'</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Specifying multiple geography levels</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">query_pums</span>(</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">geo_level =</span> <span class="st">'Region'</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">subset =</span> <span class="fu">c</span>(<span class="st">'1'</span>, <span class="st">'3'</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul>
 
 
 </section>
@@ -612,8 +681,8 @@ ul.task-list li input[type="checkbox"] {
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./pages/overview.html" class="pagination-link" aria-label="Overview">
-        <span class="nav-page-text">Overview</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./pages/data_processing.html" class="pagination-link" aria-label="Data Processing">
+        <span class="nav-page-text">Data Processing</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

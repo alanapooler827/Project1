@@ -67,7 +67,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../pages/data_investigation.html" rel="next">
-<link href="../pages/overview.html" rel="prev">
+<link href="../overview.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -128,7 +128,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../index.html" aria-current="page"> 
+    <a class="nav-link active" href="../overview.html" aria-current="page"> 
 <span class="menu-text">Home</span></a>
   </li>  
 </ul>
@@ -169,14 +169,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Project 1 Index</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../pages/overview.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Overview</span></a>
+  <a href="../overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Project Overview</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -203,7 +197,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#import-necessary-libraries" id="toc-import-necessary-libraries" class="nav-link active" data-scroll-target="#import-necessary-libraries">Import necessary libraries</a></li>
   <li><a href="#helper-function-to-turn-result-of-api-call-into-a-tibble" id="toc-helper-function-to-turn-result-of-api-call-into-a-tibble" class="nav-link" data-scroll-target="#helper-function-to-turn-result-of-api-call-into-a-tibble">Helper function to turn result of API call into a tibble</a></li>
-  <li><a href="#function-to-query-the-api-with-user-input" id="toc-function-to-query-the-api-with-user-input" class="nav-link" data-scroll-target="#function-to-query-the-api-with-user-input">Function to query the API with user input</a></li>
+  <li><a href="#function-to-query-the-census-api-with-user-input" id="toc-function-to-query-the-census-api-with-user-input" class="nav-link" data-scroll-target="#function-to-query-the-census-api-with-user-input">Function to query the census API with user input</a></li>
   </ul>
 </nav>
     </div>
@@ -235,7 +229,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>In this notebook, we will write several functions that will allow users to query the Census API with their own inputs, and then explore the data through summary statistics.</p>
+<p>This notebook contains several functions that will allow users to query the Census API with their own inputs, and then explore the data through summary statistics.</p>
 <section id="import-necessary-libraries" class="level3">
 <h3 class="anchored" data-anchor-id="import-necessary-libraries">Import necessary libraries</h3>
 <div class="cell">
@@ -260,8 +254,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="function-to-query-the-api-with-user-input" class="level3">
-<h3 class="anchored" data-anchor-id="function-to-query-the-api-with-user-input">Function to query the API with user input</h3>
+<section id="function-to-query-the-census-api-with-user-input" class="level3">
+<h3 class="anchored" data-anchor-id="function-to-query-the-census-api-with-user-input">Function to query the census API with user input</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>query_pums <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="dv">2022</span>,</span>
@@ -790,8 +784,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../pages/overview.html" class="pagination-link" aria-label="Overview">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Overview</span>
+      <a href="../overview.html" class="pagination-link" aria-label="Project Overview">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Project Overview</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
