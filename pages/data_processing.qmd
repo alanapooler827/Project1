@@ -7,7 +7,7 @@ execute:
   message: false
 ---
 
-In this notebook, we will write several functions that will allow users to query the Census API with their own inputs, and then explore the data through summary statistics. 
+This notebook contains several functions that will allow users to query the Census API with their own inputs, and then explore the data through summary statistics. 
 
 ### Import necessary libraries
 
@@ -33,7 +33,7 @@ to_tibble <- function(request) {
 }
 ```
 
-### Function to query the API with user input
+### Function to query the census API with user input
 
 ```{r}
 query_pums <- function(
