@@ -4,7 +4,7 @@
     "href": "pages/overview.html",
     "title": "Overview",
     "section": "",
-    "text": "This portion of the project will go here: ‘Lastly, we’ll write up a document via quarto (just like we did with the homework) to describe our thought process and give examples of using the functions.’\nfirst we should load some of our packages from the tidyverse package\n\nlibrary(readr) #must install first\n\nWarning: package 'readr' was built under R version 4.5.1\n\nlibrary(tidyverse) #must install first \n\nWarning: package 'tidyverse' was built under R version 4.5.1\n\n\nWarning: package 'ggplot2' was built under R version 4.5.1\n\n\nWarning: package 'tibble' was built under R version 4.5.1\n\n\nWarning: package 'tidyr' was built under R version 4.5.1\n\n\nWarning: package 'purrr' was built under R version 4.5.1\n\n\nWarning: package 'dplyr' was built under R version 4.5.1\n\n\nWarning: package 'stringr' was built under R version 4.5.1\n\n\nWarning: package 'forcats' was built under R version 4.5.1\n\n\nWarning: package 'lubridate' was built under R version 4.5.1\n\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ purrr     1.1.0\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.2     ✔ tibble    3.3.0\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(httr) #must install first\n\nWarning: package 'httr' was built under R version 4.5.1\n\nlibrary(tidycensus) #must install first)\n\nWarning: package 'tidycensus' was built under R version 4.5.1\n\nlibrary(jsonlite) #must install first \n\nWarning: package 'jsonlite' was built under R version 4.5.1\n\n\n\nAttaching package: 'jsonlite'\n\nThe following object is masked from 'package:purrr':\n\n    flatten\n\n\nsave the url as a string object\n\nURL_ids &lt;- \"https://api.census.gov/data/2023/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24\"\n#next we will load the data from the API website so that we can use it for our project\nid_info &lt;- httr::GET(URL_ids)\nstr(id_info, max.level = 1)\n\nList of 10\n $ url        : chr \"https://api.census.gov/data/2023/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24\"\n $ status_code: int 200\n $ headers    :List of 12\n  ..- attr(*, \"class\")= chr [1:2] \"insensitive\" \"list\"\n $ all_headers:List of 1\n $ cookies    :'data.frame':    1 obs. of  7 variables:\n $ content    : raw [1:969217] 5b 5b 22 53 ...\n $ date       : POSIXct[1:1], format: \"2025-09-23 21:03:59\"\n $ times      : Named num [1:6] 0 0.0119 0.0384 0.1192 0.3169 ...\n  ..- attr(*, \"names\")= chr [1:6] \"redirect\" \"namelookup\" \"connect\" \"pretransfer\" ...\n $ request    :List of 7\n  ..- attr(*, \"class\")= chr \"request\"\n $ handle     :Class 'curl_handle' &lt;externalptr&gt; \n - attr(*, \"class\")= chr \"response\"\n\n\nextracting the content portion because this is the data we will need to work with\n\nparsed_pums_info &lt;- fromJSON(rawToChar(id_info$content))\ncol_names &lt;- parsed_pums_info[1, ]\ndata_rows &lt;- parsed_pums_info[-1, ]\n\ncreating a tibble to view data more clearly\n\npums_info &lt;- as_tibble(data_rows)\n\nWarning: The `x` argument of `as_tibble.matrix()` must have unique column names if\n`.name_repair` is omitted as of tibble 2.0.0.\nℹ Using compatibility `.name_repair`.\n\ncolnames(pums_info) &lt;- col_names",
+    "text": "The goal of this project is to write functions that will manipulate and process data sets that come from a census API. We have created generic functions to automatically summarize and plot certain returned data.",
     "crumbs": [
       "Home",
       "Overview"
@@ -15,10 +15,87 @@
     "href": "index.html",
     "title": "Project 1 Index",
     "section": "",
-    "text": "Will put table of contents and any other relevant info here",
+    "text": "Table of Contents:\n\nOverview: Introduction and description of workflow\nData Processing: Functions to query API and summarize data\ninvestigation: Using functions to investigate data",
     "crumbs": [
       "Home",
       "Project 1 Index"
+    ]
+  },
+  {
+    "objectID": "pages/data_processing.html",
+    "href": "pages/data_processing.html",
+    "title": "Data Processing",
+    "section": "",
+    "text": "This notebook contains several functions that will allow users to query the Census API with their own inputs, and then explore the data through summary statistics.\n\nImport necessary libraries\n\nlibrary(tidyverse)\nlibrary(httr)\nlibrary(jsonlite)\n\n\n\nHelper function to turn result of API call into a tibble\n\nto_tibble &lt;- function(request) {\n  data &lt;- fromJSON(rawToChar(request$content))\n  data &lt;- as_tibble(data[-1, ])\n  \n  # Assign column names\n  col_names &lt;- data[1, ]\n  colnames(data) &lt;- col_names \n  \n  # Return tibble\n  return(data)\n}\n\n\n\nFunction to query the census API with user input\n\nquery_pums &lt;- function(\n    year = 2022,\n    num_vars = c('AGEP', 'PWGTP'),\n    cat_vars = 'SEX',\n    geo_level = 'All',\n    subset = NULL\n) {\n  \n  # Stop if year is not between 2010 and 2022\n  if (!year %in% 2010:2022)\n    stop('Year must be between 2010 and 2022.')\n  \n  # Define valid numeric variables\n  valid_num &lt;- c('AGEP', 'PWGTP', 'GASP', 'GRPIP', 'JWAP', 'JWDP', 'JWMNP')\n  \n  # Stop if num_vars input is valid\n  if (!all(num_vars %in% valid_num))\n    stop('Invalid input for numeric variables.')\n  # Stop if PWGTP is not returned\n  if (!'PWGTP' %in% num_vars)\n    stop('PWGTP must be returned.')\n  # Stop if less than 2 numeric variables are returned\n  if (length(num_vars) &lt; 2)\n    stop('At least one numeric variable aside from PWGTP must be returned.')\n  \n  # Define valid categorical variables\n  valid_cat &lt;- c('FER', 'HHL', 'HISPEED', 'JWTRNS', 'SCH', 'SCHL', 'SEX')\n  \n  # Stop if cat_vars input is invalid\n  if (!all(cat_vars %in% valid_cat))\n    stop('Invalid input for categorical variables.')\n  # Stop if no categorical variables are returned\n  if (length(cat_vars) &lt; 1)\n    stop('At least one categorical variable must be returned.')\n  \n  # Define valid inputs for geography\n  valid_geo &lt;- c('All', 'Region', 'Division', 'State')\n  \n  # Stop if geo_level input is not valid\n  if (!geo_level %in% valid_geo)\n    stop('Invalid input for geography level.')\n  \n  # Base URL\n  url &lt;- 'api.census.gov/data'\n  # Data set we want to query\n  dataset &lt;- 'acs/acs1/pums'\n  # Variables to query\n  vars &lt;- c(num_vars, cat_vars)\n  \n  # Build URL with user inputs\n  api_url &lt;- paste0(\n    url, \"/\", year, \"/\", dataset,\n    \"?get=\", paste(vars, collapse = \",\")\n  )\n  \n  # Geography level subsetting\n  geo_map &lt;- c(\n    Region   = \"region:*\",\n    Division = \"division:*\",\n    State    = \"state:*\"\n  )\n  \n  # allow users to specify subsets of geography level\n  if (!is.null(subset)) {\n    if (geo_level == 'State') {\n      api_url &lt;- paste0(api_url, '&for=state:', paste(subset, collapse = ','))\n    }\n    if (geo_level == 'Region') {\n      api_url &lt;- paste0(api_url, '&for=region:', paste(subset, collapse = ','))\n    }\n    if (geo_level == 'Division') {\n      api_url &lt;- paste0(api_url, '&for=division:', paste(subset, collapse = ','))\n    }\n  } else if (geo_level != 'All') {\n    api_url &lt;- paste0(api_url, '&for=', geo_map[[geo_level]])\n  }\n  \n  # Query the API\n  request &lt;- GET(api_url)\n  \n  # Call helper function to turn query results into tibble\n  data &lt;- to_tibble(request)\n  \n  #TO BE ADDED: ensure data types are correct\n  \n  # For summary function\n  class(data) &lt;- c(\"census\", class(data))\n  \n  return(data)\n}\n\n\nTest query_pums() function\nWithout sub-setting the geography level, this function is time consuming to run.\n\nquery_pums(\n  year = 2022,\n  num_vars = c('AGEP', 'PWGTP', 'GRPIP'),\n  cat_vars = c('SEX', 'HISPEED'),\n  geo_level = 'State',\n  subset='06'\n)\n\n# A tibble: 391,171 × 6\n   `56`  `14`  `0`   `2`   `0`   `06` \n   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;\n 1 56    14    0     2     0     06   \n 2 52    27    0     1     0     06   \n 3 61    70    0     1     0     06   \n 4 26    22    0     2     0     06   \n 5 38    8     0     2     0     06   \n 6 23    49    0     1     0     06   \n 7 20    63    0     1     0     06   \n 8 79    14    0     2     0     06   \n 9 20    49    0     2     0     06   \n10 43    47    0     1     0     06   \n# ℹ 391,161 more rows\n\n\nAdd function to specify multiple years of survey data & generic function to summarize",
+    "crumbs": [
+      "Home",
+      "Data Processing"
+    ]
+  },
+  {
+    "objectID": "pages/overview.html#project-goal",
+    "href": "pages/overview.html#project-goal",
+    "title": "Overview",
+    "section": "",
+    "text": "The goal of this project is to write functions that will manipulate and process data sets that come from a census API. We have created generic functions to automatically summarize and plot certain returned data.",
+    "crumbs": [
+      "Home",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "pages/overview.html#project-components",
+    "href": "pages/overview.html#project-components",
+    "title": "Overview",
+    "section": "Project Components",
+    "text": "Project Components\nTibble helper function:\n\nAdd info about to_tibble helper function\nAdd example useage\n\nAPI query function:\n\nThis function allows the user to query the PUMS API with their own inputs.\nThe user can change the year of survey, the numeric and categorical variables retrieved, and the geography level.\nExample Usage:\n# Default Arguments\nquery_pums(\n  year = 2022,\n  num_vars = c('AGEP', 'PWGTP'),\n  cat_vars = 'SEX',\n  geo_level = 'All',\n  subset = NULL\n)\nNote: it is not recommended to call query_pums() without sub-setting the geography level unless necessary- this will be time-consuming due to the size of the census data sets.\n# Specifying a geography level and subset\nquery_pums(\n  geo_level = 'State',\n  subset = '37'\n)\n\n# Specifying multiple geography levels\nquery_pums(\n  geo_level = 'Region',\n  subset = c('1', '3')\n)",
+    "crumbs": [
+      "Home",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "pages/data_investigation.html",
+    "href": "pages/data_investigation.html",
+    "title": "Census Data Investigation",
+    "section": "",
+    "text": "This is where we will investigate something interesting from the data using the API function and plotting/summarizing functions.",
+    "crumbs": [
+      "Home",
+      "Census Data Investigation"
+    ]
+  },
+  {
+    "objectID": "overview.html",
+    "href": "overview.html",
+    "title": "Project Overview",
+    "section": "",
+    "text": "Overview: Introduction and description of workflow\nData Processing: Functions to query API and summarize data\ninvestigation: Using functions to investigate data",
+    "crumbs": [
+      "Home",
+      "Project Overview"
+    ]
+  },
+  {
+    "objectID": "overview.html#project-goal",
+    "href": "overview.html#project-goal",
+    "title": "Project Overview",
+    "section": "Project Goal",
+    "text": "Project Goal\nThe goal of this project is to write functions that will manipulate and process data sets that come from a census API. We have created generic functions to automatically summarize and plot certain returned data.",
+    "crumbs": [
+      "Home",
+      "Project Overview"
+    ]
+  },
+  {
+    "objectID": "overview.html#project-components",
+    "href": "overview.html#project-components",
+    "title": "Project Overview",
+    "section": "Project Components",
+    "text": "Project Components\nTibble helper function:\n\nAdd info about to_tibble helper function\nAdd example usage\n\nQuery Census API function:\n\nThis function allows the user to query the PUMS API with their own inputs.\nThe user can change the year of survey, the numeric and categorical variables retrieved, and the geography level.\nExample Usage:\n# Default Arguments\nquery_pums(\n  year = 2022,\n  num_vars = c('AGEP', 'PWGTP'),\n  cat_vars = 'SEX',\n  geo_level = 'All',\n  subset = NULL\n)\nNote: it is not recommended to call query_pums() without sub-setting the geography level unless necessary. This will be time-consuming due to the size of the census data sets.\n# Specifying a geography level and subset\nquery_pums(\n  geo_level = 'State',\n  subset = '37'\n)\n\n# Specifying multiple geography levels\nquery_pums(\n  geo_level = 'Region',\n  subset = c('1', '3')\n)",
+    "crumbs": [
+      "Home",
+      "Project Overview"
     ]
   }
 ]
