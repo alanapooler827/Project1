@@ -21,12 +21,13 @@ library(jsonlite)
 
 save the url as a string object
 ```{r}
-URL_ids <- "api.census.gov/data/2023/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24"
+URL_ids <- "https://api.census.gov/data/2023/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24"
 ```
 
 next we will load the data from the API website so that we can use it for our project
 ```{r}
 id_info <- httr::GET(URL_ids)
+str(id_info, max.level = 1)
 ```
 
 
@@ -134,3 +135,5 @@ query <- function(
 ```
 
 Add function to specify multiple years of survey data & generic function to summarize
+
+
