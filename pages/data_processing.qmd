@@ -20,7 +20,6 @@ library(jsonlite)
 ### Helper function to turn result of API call into a tibble
 
 ```{r}
-<<<<<<< HEAD
 URL_ids <- "https://api.census.gov/data/2023/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24"
 ```
 
@@ -50,7 +49,7 @@ displaying tibble
 pums_info
 ```
 ### Function to query the API with user input
-=======
+```{r}
 to_tibble <- function(request) {
   data <- fromJSON(rawToChar(request$content))
   data <- as_tibble(data[-1, ])
@@ -174,6 +173,44 @@ query_pums(
 )
 ```
 
-Add function to specify multiple years of survey data & generic function to summarize
+Add function to specify multiple years of survey data 
+```{r}
+query_pums_multi <- function(
+  years,
+  num_vars = c("AGEP", "PWGTP"),
+  cat_vars = "SEX",
+  geo_level = "All",
+  subset = NULL
+) {
+# stop if year input is invalid
+if (!all(years %in% 2010:2022))
+  stop("Please enter a year that is between 2010 and 2022.")
+}
+
+# allows user to specify multiple years of survey data
+purr::map_dfr(
+years,
+~ {
+  dat <- query_pums(
+  year = .x,
+  num_vars = num_vars,
+  cat_vars = cat_vars,
+  geo_level = geo_level, 
+  subset = subset,
+  )
+  dat$year <- .x
+  dat
+  }
+  )
+}
+
+```
+
+ 
+
+generic function to summarize
+```{r}
+
+```
 
 
