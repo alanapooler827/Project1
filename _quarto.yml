@@ -4,7 +4,6 @@ project:
   render: 
     - overview.qmd
     - pages/data_processing.qmd
-    - pages/data_investigation.qmd
     
 website:
   title: "Project 1 Site"
@@ -20,7 +19,6 @@ website:
     contents:
       - overview.qmd
       - pages/data_processing.qmd
-      - pages/data_investigation.qmd
   page-navigation: true
   reader-mode: true
 

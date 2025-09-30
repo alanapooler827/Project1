@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-09-24">
+<meta name="dcterms.date" content="2025-09-30">
 
 <title>Project Overview – Project 1 Site</title>
 <style>
@@ -178,12 +178,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Data Processing</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./pages/data_investigation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Census Data Investigation</span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -216,7 +210,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2025-09-24</p>
+      <p class="date">2025-09-30</p>
     </div>
   </div>
   
@@ -247,6 +241,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Add info about to_tibble helper function</li>
 <li>Add example usage</li>
 </ul>
+<p><strong>Parse times helper function:</strong></p>
+<ul>
+<li><p>This function takes a string containing a range of times and returns the midpoint of those two times.</p></li>
+<li><p>Example: given “12:30p.m to 12:34p.m”, parse_times() will return “12:42p.m”</p></li>
+</ul>
+<p><strong>Code look-up helper function:</strong></p>
+<ul>
+<li><p>This function uses the Census API variable information to look up the times associated with a given code for the JWAP and JWDP variables.</p></li>
+<li><p>The function uses the year specified in query_pums() to access the variable metadata.</p></li>
+<li><p>The parse_times() function is applied after looking up the codes.</p></li>
+<li><p>Example: given “258” for the variable “JWAP”, code_lookup() will return the string “9:40 p.m. to 9:44 p.m.”</p></li>
+</ul>
 <p><strong>Query Census API function:</strong></p>
 <ul>
 <li><p>This function allows the user to query the PUMS API with their own inputs.</p></li>
@@ -273,6 +279,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">subset =</span> <span class="fu">c</span>(<span class="st">'1'</span>, <span class="st">'3'</span>)</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 </ul>
+<p><strong>Query Census API with multiple years function:</strong></p>
+<p><strong>Generic summary function:</strong></p>
 
 
 </section>

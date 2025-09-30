@@ -24,6 +24,22 @@ The goal of this project is to write functions that will manipulate and process 
 -   Add info about to_tibble helper function
 -   Add example usage
 
+**Parse times helper function:**
+
+-   This function takes a string containing a range of times and returns the midpoint of those two times.
+
+-   Example: given "12:30p.m to 12:34p.m", parse_times() will return "12:42p.m"
+
+**Code look-up helper function:**
+
+-   This function uses the Census API variable information to look up the times associated with a given code for the JWAP and JWDP variables.
+
+-   The function uses the year specified in query_pums() to access the variable metadata.
+
+-   The parse_times() function is applied after looking up the codes.
+
+-   Example: given "258" for the variable "JWAP", code_lookup() will return the string "9:40 p.m. to 9:44 p.m."
+
 **Query Census API function:**
 
 -   This function allows the user to query the PUMS API with their own inputs.
@@ -58,3 +74,7 @@ The goal of this project is to write functions that will manipulate and process 
       subset = c('1', '3')
     )
     ```
+
+**Query Census API with multiple years function:**
+
+**Generic summary function:**

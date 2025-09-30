@@ -15,6 +15,8 @@ This notebook contains several functions that will allow users to query the Cens
 library(tidyverse)
 library(httr)
 library(jsonlite)
+library(stringr)
+library(purrr)
 ```
 
 ### Helper function to turn result of API call into a tibble
@@ -29,8 +31,6 @@ id_info <- httr::GET(URL_ids)
 str(id_info, max.level = 1)
 ```
 
-
-### Add helper function to turn result of API call to tibble
 extracting the content portion because this is the data we will need to work with 
 ```{r}
 parsed_pums_info <- fromJSON(rawToChar(id_info$content))
@@ -48,14 +48,19 @@ displaying tibble
 ```{r}
 pums_info
 ```
-### Function to query the API with user input
+
+### Helper function to convert API request results to tibble
 ```{r}
 to_tibble <- function(request) {
-  data <- fromJSON(rawToChar(request$content))
-  data <- as_tibble(data[-1, ])
+  req <- fromJSON(rawToChar(request$content))
+
+  # get data rows
+  data_rows <- req[-1, ]
+  # create tibble
+  data <- as_tibble(data_rows)
   
-  # Assign column names
-  col_names <- data[1, ]
+  # Assign column names to data
+  col_names <- req[1, ]
   colnames(data) <- col_names 
   
   # Return tibble
@@ -63,9 +68,56 @@ to_tibble <- function(request) {
 }
 ```
 
-### Function to query the census API with user input
->>>>>>> ebe5210c2ee4cfc273c951882afc5b576ab24a61
+#### Helper function to parse and convert time values
+```{r}
+parse_time <- function(time_string) {
+  ts <- as.character(time_string)
+  if (length(ts) == 0 || is.na(ts) || ts == "") return(NA)
+  
+  # split start and end
+  parts <- str_split(ts, " to ", simplify = TRUE)
+  
+  # Replace a.m/p.m with AM/PM to work with POSIXct
+  start_clean <- toupper(sub("p.m.", "PM", sub("a.m.", "AM", parts[1])))
+  end_clean   <- toupper(sub("p.m.", "PM", sub("a.m.", "AM", parts[2])))
+  
+  # find start and end times
+  start <- as.POSIXct(start_clean, format = "%I:%M %p", tz = "UTC")
+  end   <- as.POSIXct(end_clean,   format = "%I:%M %p", tz = "UTC")
+  
+  # find midpoint between start and end times
+  mid <- start + difftime(end, start, units = "secs") / 2
+  
+  # format as HH:MM
+  format(mid, "%I:%M %p")
+}
+```
 
+
+#### Helper function to map JWAP and JWDP time codes to actual times
+```{r}
+code_lookup <- function(data, var, year, parse_fun) {
+  if (var %in% names(data)) {
+    # get metadata and decode codes to value strings
+    meta <- fromJSON(paste0("https://api.census.gov/data/", 
+                            year, "/acs/acs1/pums/variables/",
+                            var, ".json"))
+    
+    lookup <- meta$values$item
+
+    # pad codes with leading zeros to match lookup keys (3 digits)
+    padded_codes <- str_pad(data[[var]], width = 3, side = "left", pad = "0")
+    data[[var]] <- lookup[padded_codes]
+
+    # parse value strings
+    data[[var]] <- sapply(data[[var]], parse_fun)
+  }
+  return(data)
+}
+```
+
+
+### Function to query the census API with user input
 ```{r}
 query_pums <- function(
     year = 2022,
@@ -102,6 +154,8 @@ query_pums <- function(
   if (length(cat_vars) < 1)
     stop('At least one categorical variable must be returned.')
   
+  # Turn FER, HHL, HISPEED, JWTRNS, SCH, SCHL,
+  
   # Define valid inputs for geography
   valid_geo <- c('All', 'Region', 'Division', 'State')
   
@@ -110,7 +164,7 @@ query_pums <- function(
     stop('Invalid input for geography level.')
   
   # Base URL
-  url <- 'api.census.gov/data'
+  url <- 'https://api.census.gov/data'
   # Data set we want to query
   dataset <- 'acs/acs1/pums'
   # Variables to query
@@ -150,7 +204,16 @@ query_pums <- function(
   # Call helper function to turn query results into tibble
   data <- to_tibble(request)
   
-  #TO BE ADDED: ensure data types are correct
+  # Convert categorical variables to factors
+  for (var in cat_vars) {
+    if (var %in% names(data)) {
+      data[[var]] <- as.factor(data[[var]])
+    }
+  }
+  
+  # Parse time variables if included in query
+  data <- code_lookup(data, "JWDP", year, parse_time)
+  data <- code_lookup(data, "JWAP", year, parse_time)
   
   # For summary function
   class(data) <- c("census", class(data))
@@ -162,18 +225,18 @@ query_pums <- function(
 #### Test query_pums() function
 
 Without sub-setting the geography level, this function is time consuming to run.
-
 ```{r}
 query_pums(
   year = 2022,
-  num_vars = c('AGEP', 'PWGTP', 'GRPIP'),
+  num_vars = c('AGEP', 'PWGTP', 'JWAP'),
   cat_vars = c('SEX', 'HISPEED'),
   geo_level = 'State',
   subset='06'
 )
 ```
 
-Add function to specify multiple years of survey data 
+
+### Add function to specify multiple years of survey data 
 ```{r}
 query_pums_multi <- function(
   years,
@@ -185,10 +248,9 @@ query_pums_multi <- function(
 # stop if year input is invalid
 if (!all(years %in% 2010:2022))
   stop("Please enter a year that is between 2010 and 2022.")
-}
 
 # allows user to specify multiple years of survey data
-purr::map_dfr(
+purrr::map_dfr(
 years,
 ~ {
   dat <- query_pums(
@@ -208,9 +270,10 @@ years,
 
  
 
-generic function to summarize
+### Summary function
 ```{r}
 
 ```
 
 
+### Data investigation
