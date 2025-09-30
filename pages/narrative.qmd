@@ -1,21 +1,8 @@
 ---
-title: "Project Overview"
-Author: Alana Pooler & Monica McDaniel
+title: "Overview"
 format: html
 toc: TRUE
 ---
-
-### Table of Contents:
-
-1.  Overview: Introduction and description of workflow
-
-2.  Data Processing: Functions to query API and summarize data
-
-3.  investigation: Using functions to investigate data
-
-## Project Goal
-
-The goal of this project is to write functions that will manipulate and process data sets that come from a census API. We have created generic functions to automatically summarize and plot certain returned data.
 
 ## Project Components
 
