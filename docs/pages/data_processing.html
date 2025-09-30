@@ -8,7 +8,7 @@
 
 <meta name="dcterms.date" content="2025-09-30">
 
-<title>Data Processing – Project 1 Site</title>
+<title>Data Processing &amp; Investigation – Project 1 Site</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -146,7 +146,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../pages/data_processing.html">Data Processing</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../pages/data_processing.html">Data Processing &amp; Investigation</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -169,19 +169,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Project Overview</span></a>
+ <span class="menu-text">Index</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../pages/narrative.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Overview</span></a>
+ <span class="menu-text">Narrative</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../pages/data_processing.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Data Processing</span></a>
+ <span class="menu-text">Data Processing &amp; Investigation</span></a>
   </div>
 </li>
     </ul>
@@ -195,7 +195,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#import-necessary-libraries" id="toc-import-necessary-libraries" class="nav-link active" data-scroll-target="#import-necessary-libraries">Import necessary libraries</a></li>
-  <li><a href="#helper-function-to-turn-result-of-api-call-into-a-tibble" id="toc-helper-function-to-turn-result-of-api-call-into-a-tibble" class="nav-link" data-scroll-target="#helper-function-to-turn-result-of-api-call-into-a-tibble">Helper function to turn result of API call into a tibble</a></li>
   <li><a href="#helper-function-to-convert-api-request-results-to-tibble" id="toc-helper-function-to-convert-api-request-results-to-tibble" class="nav-link" data-scroll-target="#helper-function-to-convert-api-request-results-to-tibble">Helper function to convert API request results to tibble</a></li>
   <li><a href="#function-to-query-the-census-api-with-user-input" id="toc-function-to-query-the-census-api-with-user-input" class="nav-link" data-scroll-target="#function-to-query-the-census-api-with-user-input">Function to query the census API with user input</a></li>
   <li><a href="#add-function-to-specify-multiple-years-of-survey-data" id="toc-add-function-to-specify-multiple-years-of-survey-data" class="nav-link" data-scroll-target="#add-function-to-specify-multiple-years-of-survey-data">Add function to specify multiple years of survey data</a></li>
@@ -209,7 +208,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Data Processing</h1>
+<h1 class="title">Data Processing &amp; Investigation</h1>
 </div>
 
 
@@ -242,9 +241,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="helper-function-to-turn-result-of-api-call-into-a-tibble" class="level3">
-<h3 class="anchored" data-anchor-id="helper-function-to-turn-result-of-api-call-into-a-tibble">Helper function to turn result of API call into a tibble</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>URL_ids <span class="ot">&lt;-</span> <span class="st">"https://api.census.gov/data/2023/acs/acs1/pums?get=SEX,PWGTP,MAR&amp;SCHL=24"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -261,8 +257,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  $ all_headers:List of 1
  $ cookies    :'data.frame':    1 obs. of  7 variables:
  $ content    : raw [1:969217] 5b 5b 22 53 ...
- $ date       : POSIXct[1:1], format: "2025-09-30 19:41:46"
- $ times      : Named num [1:6] 0 0.0583 0.0911 0.1626 0.3719 ...
+ $ date       : POSIXct[1:1], format: "2025-09-30 19:53:20"
+ $ times      : Named num [1:6] 0 0.0016 0.0444 0.1113 0.3797 ...
   ..- attr(*, "names")= chr [1:6] "redirect" "namelookup" "connect" "pretransfer" ...
  $ request    :List of 7
   ..- attr(*, "class")= chr "request"
@@ -949,8 +945,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../pages/narrative.html" class="pagination-link" aria-label="Overview">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Overview</span>
+      <a href="../pages/narrative.html" class="pagination-link" aria-label="Narrative">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Narrative</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

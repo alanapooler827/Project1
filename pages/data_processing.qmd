@@ -1,5 +1,5 @@
 ---
-title: "Data Processing"
+title: "Data Processing & Investigation"
 format: html
 toc: TRUE
 execute: 
@@ -19,7 +19,6 @@ library(stringr)
 library(purrr)
 ```
 
-### Helper function to turn result of API call into a tibble
 
 ```{r}
 URL_ids <- "https://api.census.gov/data/2023/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24"
