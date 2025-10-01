@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-09-30">
+<meta name="dcterms.date" content="2025-10-01">
 
 <title>Data Processing &amp; Investigation – Project 1 Site</title>
 <style>
@@ -76,7 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-9813b20eb36b3e0cf6c30709848dd89f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-5ed218413b0e1fab9eb6d164aef260bd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -198,7 +198,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#helper-function-to-convert-api-request-results-to-tibble" id="toc-helper-function-to-convert-api-request-results-to-tibble" class="nav-link" data-scroll-target="#helper-function-to-convert-api-request-results-to-tibble">Helper function to convert API request results to tibble</a></li>
   <li><a href="#function-to-query-the-census-api-with-user-input" id="toc-function-to-query-the-census-api-with-user-input" class="nav-link" data-scroll-target="#function-to-query-the-census-api-with-user-input">Function to query the census API with user input</a></li>
   <li><a href="#add-function-to-specify-multiple-years-of-survey-data" id="toc-add-function-to-specify-multiple-years-of-survey-data" class="nav-link" data-scroll-target="#add-function-to-specify-multiple-years-of-survey-data">Add function to specify multiple years of survey data</a></li>
-  <li><a href="#summary-function" id="toc-summary-function" class="nav-link" data-scroll-target="#summary-function">Summary function</a></li>
+  <li><a href="#writing-a-generic-function-for-summarizing" id="toc-writing-a-generic-function-for-summarizing" class="nav-link" data-scroll-target="#writing-a-generic-function-for-summarizing">Writing a Generic Function for Summarizing</a></li>
   <li><a href="#data-investigation" id="toc-data-investigation" class="nav-link" data-scroll-target="#data-investigation">Data investigation</a></li>
   </ul>
 </nav>
@@ -219,7 +219,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2025-09-30</p>
+      <p class="date">2025-10-01</p>
     </div>
   </div>
   
@@ -257,8 +257,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  $ all_headers:List of 1
  $ cookies    :'data.frame':    1 obs. of  7 variables:
  $ content    : raw [1:969217] 5b 5b 22 53 ...
- $ date       : POSIXct[1:1], format: "2025-09-30 19:53:20"
- $ times      : Named num [1:6] 0 0.0016 0.0444 0.1113 0.3797 ...
+ $ date       : POSIXct[1:1], format: "2025-10-01 16:27:01"
+ $ times      : Named num [1:6] 0 0.0247 0.0573 0.1996 0.4492 ...
   ..- attr(*, "names")= chr [1:6] "redirect" "namelookup" "connect" "pretransfer" ...
  $ request    :List of 7
   ..- attr(*, "class")= chr "request"
@@ -534,8 +534,69 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="summary-function" class="level3">
-<h3 class="anchored" data-anchor-id="summary-function">Summary function</h3>
+<section id="writing-a-generic-function-for-summarizing" class="level3">
+<h3 class="anchored" data-anchor-id="writing-a-generic-function-for-summarizing">Writing a Generic Function for Summarizing</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>plot.function <span class="co">#what is used for a class = function</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (x, y = 0, to = 1, from = y, xlim = NULL, ylab = NULL, 
+    ...) 
+{
+    if (!missing(y) &amp;&amp; missing(from)) 
+        from &lt;- y
+    if (is.null(xlim)) {
+        if (is.null(from)) 
+            from &lt;- 0
+    }
+    else {
+        if (missing(from)) 
+            from &lt;- xlim[1L]
+        if (missing(to)) 
+            to &lt;- xlim[2L]
+    }
+    if (is.null(ylab)) {
+        sx &lt;- substitute(x)
+        ylab &lt;- if (mode(x) != "name") 
+            deparse(sx)[1L]
+        else {
+            xname &lt;- list(...)[["xname"]]
+            if (is.null(xname)) 
+                xname &lt;- "x"
+            paste0(sx, "(", xname, ")")
+        }
+    }
+    curve(expr = x, from = from, to = to, xlim = xlim, ylab = ylab, 
+        ...)
+}
+&lt;bytecode: 0x00000203f9e69af8&gt;
+&lt;environment: namespace:graphics&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getS3method</span>(<span class="st">"plot"</span>, <span class="st">"data.frame"</span>) <span class="co">#what is used for class = data frame</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (x, ...) 
+{
+    plot2 &lt;- function(x, xlab = names(x)[1L], ylab = names(x)[2L], 
+        ...) plot(x[[1L]], x[[2L]], xlab = xlab, ylab = ylab, 
+        ...)
+    if (!is.data.frame(x)) 
+        stop("'plot.data.frame' applied to non data frame")
+    if (ncol(x) == 1) {
+        x1 &lt;- x[[1L]]
+        if (class(x1)[1L] %in% c("integer", "numeric")) 
+            stripchart(x1, ...)
+        else plot(x1, ...)
+    }
+    else if (ncol(x) == 2) {
+        plot2(x, ...)
+    }
+    else {
+        pairs(data.matrix(x), ...)
+    }
+}
+&lt;bytecode: 0x00000203f9e32c48&gt;
+&lt;environment: namespace:graphics&gt;</code></pre>
+</div>
+</div>
 </section>
 <section id="data-investigation" class="level3">
 <h3 class="anchored" data-anchor-id="data-investigation">Data investigation</h3>

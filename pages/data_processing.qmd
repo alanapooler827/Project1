@@ -19,33 +19,22 @@ library(stringr)
 library(purrr)
 ```
 
-
+### Creating a string for the URL
 ```{r}
 URL_ids <- "https://api.census.gov/data/2023/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24"
 ```
 
-next we will load the data from the API website so that we can use it for our project
+### Loading the data from the API website 
 ```{r}
-id_info <- httr::GET(URL_ids)
-str(id_info, max.level = 1)
+id_info <- httr::GET(URL_ids) #downloads the data and stored as id_info
+str(id_info, max.level = 1) #structure of id_info
 ```
 
-extracting the content portion because this is the data we will need to work with 
+### Extracting the content portion because this is the data we will need to work with
 ```{r}
-parsed_pums_info <- fromJSON(rawToChar(id_info$content))
-col_names <- parsed_pums_info[1, ]
-data_rows <- parsed_pums_info[-1, ]
-```
-
-creating a tibble to view data more clearly
-```{r}
-pums_info <- as_tibble(data_rows)
-colnames(pums_info) <- col_names 
-```
-
-displaying tibble
-```{r}
-pums_info
+parsed_pums_info <- fromJSON(rawToChar(id_info$content)) #converting the raw data to JSON format
+pums_info <- as_tibble(data_rows) #to turn into a tibble
+pums_info #display tibble
 ```
 
 ### Helper function to convert API request results to tibble
@@ -271,8 +260,18 @@ years,
 
 ### Writing a Generic Function for Summarizing
 ```{r}
-plot.function #what is used for a class = function
-getS3method("plot", "data.frame") #what is used for class = data frame
+data_2022 <- query_pums(
+  year = 2022,
+  num_vars = c("AGEP", "PWGTP"),
+  cat_vars = c("SEX"),
+  geo_level = "State",
+  subset = "06"
+)
+
+summary_result <- summary.census(data_2022)
+summary_result$numeric
+summary_result$categorical
+    } 
 ```
 
 
