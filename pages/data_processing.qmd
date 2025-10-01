@@ -17,25 +17,9 @@ library(httr)
 library(jsonlite)
 library(stringr)
 library(purrr)
+library(ggplot2)
 ```
 
-### Creating a string for the URL
-```{r}
-URL_ids <- "https://api.census.gov/data/2023/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24"
-```
-
-### Loading the data from the API website 
-```{r}
-id_info <- httr::GET(URL_ids) #downloads the data and stored as id_info
-str(id_info, max.level = 1) #structure of id_info
-```
-
-### Extracting the content portion because this is the data we will need to work with
-```{r}
-parsed_pums_info <- fromJSON(rawToChar(id_info$content)) #converting the raw data to JSON format
-pums_info <- as_tibble(data_rows) #to turn into a tibble
-pums_info #display tibble
-```
 
 ### Helper function to convert API request results to tibble
 ```{r}
@@ -257,22 +241,31 @@ years,
 ```
 
  
-
 ### Writing a Generic Function for Summarizing
 ```{r}
-data_2022 <- query_pums(
-  year = 2022,
-  num_vars = c("AGEP", "PWGTP"),
-  cat_vars = c("SEX"),
-  geo_level = "State",
-  subset = "06"
-)
-
-summary_result <- summary.census(data_2022)
-summary_result$numeric
-summary_result$categorical
-    } 
+summary.census <- function(tibble = tibble, num_vars = c('AGEP', 'PWGTP'), cat_vars = 'AGE', ...){
+  mean <- sum(val_num*val_num$val_num)/sum(val_num$val_num)
+}
+ return(list())
 ```
+
+### Test out summary function
+```{r}
+summary(census)
+```
+
+### Create a plot for the census class table
+```{r}
+ggplot(census, 
+       aes(x = get(cat_vars, y = get(num_vars, weight = PWGTP)) +
+             geom_boxplot())
+```
+
+### Test out plot function
+```{r}
+
+```
+
 
 
 ### Data investigation
