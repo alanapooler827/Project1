@@ -269,9 +269,10 @@ years,
 
  
 
-### Summary function
+### Writing a Generic Function for Summarizing
 ```{r}
-
+plot.function #what is used for a class = function
+getS3method("plot", "data.frame") #what is used for class = data frame
 ```
 
 
