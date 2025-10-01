@@ -244,26 +244,27 @@ years,
 ### Writing a Generic Function for Summarizing
 ```{r}
 summary.census <- function(tibble = tibble, num_vars = c('AGEP', 'PWGTP'), cat_vars = 'AGE', ...){
-  mean <- sum(val_num*val_num$val_num)/sum(val_num$val_num)
+    sample_mean <- sum(num_vars^2*PWGTP)/sum(PWGTP)
+    sample_sd <- sqrt(sum(num_vars^2*PWGTP)/sum(PWGTP)-sample_mean^2)
 }
- return(list())
+return(list)
 ```
 
 ### Test out summary function
 ```{r}
-summary(census)
+summary(sample_mean(AGEP))
 ```
 
 ### Create a plot for the census class table
 ```{r}
-ggplot(census, 
-       aes(x = get(cat_vars, y = get(num_vars, weight = PWGTP)) +
-             geom_boxplot())
+ggplot(tibble, 
+       aes(x = get(cat_vars), y = get(num_vars), weight = PWGTP)) +
+             geom_boxplot()
 ```
 
 ### Test out plot function
 ```{r}
-
+geom_boxplot(AGEP)
 ```
 
 
