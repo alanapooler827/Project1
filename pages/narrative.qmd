@@ -8,8 +8,17 @@ toc: TRUE
 
 **Tibble helper function:**
 
--   Add info about to_tibble helper function
--   Add example usage
+-   This function takes the API request built in query_pums() and turns it into a tibble.
+
+-   Example usage:
+
+    ``` r
+    # after building API URL, use GET()
+    api_request <- GET(api_url)
+      
+    # Call helper function to turn query results into tibble
+    data <- to_tibble(request)
+    ```
 
 **Parse times helper function:**
 
@@ -41,8 +50,8 @@ toc: TRUE
       year = 2022,
       num_vars = c('AGEP', 'PWGTP'),
       cat_vars = 'SEX',
-      geo_level = 'All',
-      subset = NULL
+      geo_level = 'State',
+      subset = '18'
     )
     ```
 
@@ -64,4 +73,35 @@ toc: TRUE
 
 **Query Census API with multiple years function:**
 
-**Generic summary function:**
+-   This function allows users to request multiple years of survey data. One tibble containing all requested years is returned.
+
+-   Example usage:
+
+    ``` r
+    # Default arguments
+    query_pums_multi(
+      years = c(2019, 2021, 2022),
+      num_vars = c('AGEP', 'PWGTP'),
+      cat_vars = 'SEX',
+      geo_level = 'State',
+      subset='18'
+    )
+    ```
+
+**Summary function:**
+
+-   This function takes the data returned by query_pums() and returns the weighted mean and standard deviation for numeric variables, and weighted counts for categorical variables.
+
+-   The variable 'PWGTP' is used as the weight.
+
+-   If no variables are specified when calling 'summary()', all variables except for 'PWGTP' will be summarized.
+
+-   Example usage:
+
+    ``` r
+    # Summarize all numerical and categorical variables in the 'census' tibble
+    summary(census)
+
+    # Specify variables to be summarized from the 'census' tibble
+    summary(census, num_vars = c('AGEP', 'GASP'), cat_vars = 'SEX')
+    ```
