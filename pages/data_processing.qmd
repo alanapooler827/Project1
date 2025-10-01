@@ -68,13 +68,14 @@ parse_time <- function(time_string) {
 
 #### Helper function to map JWAP and JWDP time codes to actual times
 ```{r}
-code_lookup <- function(data, var, year, parse_fun) {
+time_code_lookup <- function(data, var, year, parse_fun) {
   if (var %in% names(data)) {
     # get metadata and decode codes to value strings
     meta <- fromJSON(paste0("https://api.census.gov/data/", 
                             year, "/acs/acs1/pums/variables/",
                             var, ".json"))
     
+    # extract codes
     lookup <- meta$values$item
 
     # pad codes with leading zeros to match lookup keys (3 digits)
@@ -95,13 +96,17 @@ query_pums <- function(
     year = 2022,
     num_vars = c('AGEP', 'PWGTP'),
     cat_vars = 'SEX',
-    geo_level = 'All',
-    subset = NULL
+    geo_level = 'State',
+    subset = '18'
 ) {
   
   # Stop if year is not between 2010 and 2022
   if (!year %in% 2010:2022)
     stop('Year must be between 2010 and 2022.')
+  
+  # stop if year = 2020
+  if (year == 2020)
+    stop('No data available for 2020.')
   
   # Define valid numeric variables
   valid_num <- c('AGEP', 'PWGTP', 'GASP', 'GRPIP', 'JWAP', 'JWDP', 'JWMNP')
@@ -125,8 +130,6 @@ query_pums <- function(
   # Stop if no categorical variables are returned
   if (length(cat_vars) < 1)
     stop('At least one categorical variable must be returned.')
-  
-  # Turn FER, HHL, HISPEED, JWTRNS, SCH, SCHL,
   
   # Define valid inputs for geography
   valid_geo <- c('All', 'Region', 'Division', 'State')
@@ -183,9 +186,16 @@ query_pums <- function(
     }
   }
   
+  # Ensure numeric variables are the correct type
+  for (var in num_vars) {
+    if (var %in% names(data)) {
+      data[[var]] <- as.numeric(data[[var]])
+    }
+  }
+  
   # Parse time variables if included in query
-  data <- code_lookup(data, "JWDP", year, parse_time)
-  data <- code_lookup(data, "JWAP", year, parse_time)
+  data <- time_code_lookup(data, "JWDP", year, parse_time)
+  data <- time_code_lookup(data, "JWAP", year, parse_time)
   
   # For summary function
   class(data) <- c("census", class(data))
@@ -203,8 +213,29 @@ query_pums(
   num_vars = c('AGEP', 'PWGTP', 'JWAP'),
   cat_vars = c('SEX', 'HISPEED'),
   geo_level = 'State',
-  subset='06'
+  subset='18'
 )
+```
+
+Verify that checks work correctly (commented out after testing so document can be rendered)
+Calling function with invalid year (outside of valid range):
+```{r}
+#query_pums(year = 2008)
+```
+
+Calling function with invalid year (2020):
+```{r}
+#query_pums(year = 2020)
+```
+
+Calling function without 'PWGTP' variable:
+```{r}
+#query_pums(year = 2022, num_vars = c('AGEP', 'JWAP'))
+```
+
+Calling function without any categorical variables:
+```{r}
+#query_pums(year = 2022, cat_vars = NULL)
 ```
 
 
@@ -214,57 +245,138 @@ query_pums_multi <- function(
   years,
   num_vars = c("AGEP", "PWGTP"),
   cat_vars = "SEX",
-  geo_level = "All",
-  subset = NULL
+  geo_level = "State",
+  subset = '18'
 ) {
-# stop if year input is invalid
-if (!all(years %in% 2010:2022))
-  stop("Please enter a year that is between 2010 and 2022.")
+  # stop if year input is invalid
+  if (!all(years %in% 2010:2022))
+    stop("Please enter years that are between 2010 and 2022.")
+  
+  # stop if year = 2020
+  if (any(years == 2020))
+    stop('No data available for 2020.')
 
-# allows user to specify multiple years of survey data
-purrr::map_dfr(
-years,
-~ {
-  dat <- query_pums(
-  year = .x,
-  num_vars = num_vars,
-  cat_vars = cat_vars,
-  geo_level = geo_level, 
-  subset = subset,
-  )
-  dat$year <- .x
-  dat
-  }
+  # query each specified year of survey data
+  map_dfr(
+    years,
+    ~ {
+      dat <- query_pums(
+        year = .x,
+        num_vars = num_vars,
+        cat_vars = cat_vars,
+        geo_level = geo_level, 
+        subset = subset
+        )
+      dat$year <- .x
+      return(dat)
+      }
   )
 }
+```
 
+#### Test query_pums_multi() function
+```{r}
+data <- query_pums_multi(
+  years = c(2019, 2021, 2022),
+  num_vars = c('AGEP', 'PWGTP', 'JWAP'),
+  cat_vars = c('SEX', 'FER'),
+  geo_level = 'State',
+  subset='18'
+)
+
+# check that all requested years are included in result
+data |> count(year)
+```
+
+
+Verify that checks for invalid years work (commented out after testing so document can be rendered)
+Calling function with 2020
+```{r}
+#query_pums_multi(years = c(2019, 2020))
+```
+
+Calling function with years outside of 2010-2022 range
+```{r}
+#query_pums_multi(years = c(2008, 2009))
 ```
 
  
-### Writing a Generic Function for Summarizing
+ 
+### Function for Summarizing
 ```{r}
-summary.census <- function(tibble = tibble, num_vars = c('AGEP', 'PWGTP'), cat_vars = 'AGE', ...){
-    sample_mean <- sum(num_vars^2*PWGTP)/sum(PWGTP)
-    sample_sd <- sqrt(sum(num_vars^2*PWGTP)/sum(PWGTP)-sample_mean^2)
+summary.census <- function(
+    tibble = tibble,
+    num_vars = NULL,
+    cat_vars = NULL
+) {
+  
+  # if no numeric variables are specified, select all except PWGTP
+  if (is.null(num_vars)) {
+    num_vars <- tibble |>
+      # select numeric variables
+      select(where(is.numeric)) |>
+      # exclude PWGTP
+      select(-PWGTP) |>
+      names()
+  }
+  
+  # if no categorical variables are specified, select all
+  if (is.null(cat_vars)) {
+    cat_vars <- tibble |>
+      select(where(is.factor)) |>
+      names()
+  }
+  
+  # use PWGTP as weight
+  weight <- tibble$PWGTP
+  
+  # numeric variables summary
+  numeric <- sapply(num_vars, function(v) {
+    x <- tibble[[v]]
+    # calculate weighted mean and SD
+    mean <- sum(x * weight, na.rm = TRUE)/sum(weight)
+    sd <- sqrt(sum(x^2*weight, na.rm = TRUE)/sum(weight)-mean^2)
+    # create vector of values
+    c(mean = mean, sd = sd)
+  })
+  
+  categorical <- lapply(cat_vars, function(v) {
+    tibble |>
+      group_by(.data[[v]]) |>
+      summarise(count = sum(weight), na.rm = TRUE)
+  })
+  
+  return(list(num_summary = numeric, cat_summary = categorical))
 }
-return(list)
 ```
 
 ### Test out summary function
 ```{r}
-summary(sample_mean(AGEP))
+census <- query_pums(
+  year = 2022,
+  num_vars = c('AGEP', 'PWGTP', 'GASP'),
+  cat_vars = c('SEX', 'HISPEED'),
+)
+
+summary(census)
+
 ```
 
 ### Create a plot for the census class table
 ```{r}
-ggplot(tibble, 
-       aes(x = get(cat_vars), y = get(num_vars), weight = PWGTP)) +
-             geom_boxplot()
+census <- query_pums(
+  year = 2022,
+  num_vars = c('AGEP', 'PWGTP', 'GASP'),
+  cat_vars = c('SEX', 'HISPEED'),
+)
+ggplot(census,
+ aes(x = get(cat_var), y = get(num_var), weight = PWGTP)) +
+ geom_boxplot()
 ```
 
 ### Test out plot function
 ```{r}
-geom_boxplot(AGEP)
+geom_boxplot(census)
 ```
 
 
