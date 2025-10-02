@@ -15,7 +15,7 @@ toc: TRUE
     ``` r
     # after building API URL, use GET()
     api_request <- GET(api_url)
-      
+
     # Call helper function to turn query results into tibble
     data <- to_tibble(request)
     ```
@@ -104,4 +104,15 @@ toc: TRUE
 
     # Specify variables to be summarized from the 'census' tibble
     summary(census, num_vars = c('AGEP', 'GASP'), cat_vars = 'SEX')
+    ```
+
+**Plotting Function**
+
+-   This function accepts one numeric variable and one categorical variable from the data returned by query_pums() and creates a boxplot.
+
+-   Example usage:
+
+    ``` r
+    # Plot variables from the 'census' tibble
+    plot(census, cat_var = 'SEX', num_var = 'AGEP')
     ```
