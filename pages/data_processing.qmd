@@ -5,6 +5,8 @@ toc: TRUE
 execute: 
   warning: false
   message: false
+editor_options: 
+  chunk_output_type: console
 ---
 
 This notebook contains several functions that will allow users to query the Census API with their own inputs, and then explore the data through summary statistics. 
@@ -364,19 +366,27 @@ summary(census)
 
 ### Create a plot for the census class table
 ```{r}
-census <- query_pums(
-  year = 2022,
-  num_vars = c('AGEP', 'PWGTP', 'GASP'),
-  cat_vars = c('SEX', 'HISPEED'),
+plot.census <- function(
+    tibble = tibble,
+    num_vars = NULL,
+    cat_vars = NULL
 )
-ggplot(census,
- aes(x = get(cat_var), y = get(num_var), weight = PWGTP)) +
- geom_boxplot()
+ggplot(tibble,
+ aes(x = get(cat_var, y = get(num_var), weight = PWGTP)) +
+ geom_boxplot() +
+   labs(
+ title = paste("Weighted Boxplot of", num_var, "by", cat_var),
+ x = cat_var,
+ y = num_var
+)
+
+return(census)
+}
 ```
 
 ### Test out plot function
 ```{r}
-geom_boxplot(census)
+plot(census, num_var = "AGEP", cat_var = "SEX")
 ```
 
 
