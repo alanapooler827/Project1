@@ -195,7 +195,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#project-components" id="toc-project-components" class="nav-link active" data-scroll-target="#project-components">Project Components</a></li>
+  <li><a href="#project-components" id="toc-project-components" class="nav-link active" data-scroll-target="#project-components">Project Components</a>
+  <ul class="collapse">
+  <li><a href="#helper-functions" id="toc-helper-functions" class="nav-link" data-scroll-target="#helper-functions">Helper functions:</a></li>
+  <li><a href="#query-census-api-function" id="toc-query-census-api-function" class="nav-link" data-scroll-target="#query-census-api-function"><strong>Query Census API function:</strong></a></li>
+  <li><a href="#multi-year-census-api-query-function" id="toc-multi-year-census-api-query-function" class="nav-link" data-scroll-target="#multi-year-census-api-query-function"><strong>Multi-year Census API query function:</strong></a></li>
+  <li><a href="#summary-function" id="toc-summary-function" class="nav-link" data-scroll-target="#summary-function"><strong>Summary function:</strong></a></li>
+  <li><a href="#plotting-function" id="toc-plotting-function" class="nav-link" data-scroll-target="#plotting-function"><strong>Plotting Function:</strong></a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -229,6 +236,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="project-components" class="level2">
 <h2 class="anchored" data-anchor-id="project-components">Project Components</h2>
+<section id="helper-functions" class="level3">
+<h3 class="anchored" data-anchor-id="helper-functions">Helper functions:</h3>
 <p><strong>Tibble helper function:</strong></p>
 <ul>
 <li><p>This function takes the API request built in query_pums() and turns it into a tibble.</p></li>
@@ -251,7 +260,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>The parse_times() function is applied after looking up the codes.</p></li>
 <li><p>Example: given “258” for the variable “JWAP”, code_lookup() will return the string “9:40 p.m. to 9:44 p.m.”</p></li>
 </ul>
-<p><strong>Query Census API function:</strong></p>
+</section>
+<section id="query-census-api-function" class="level3">
+<h3 class="anchored" data-anchor-id="query-census-api-function"><strong>Query Census API function:</strong></h3>
 <ul>
 <li><p>This function allows the user to query the PUMS API with their own inputs.</p></li>
 <li><p>The user can change the year of survey, the numeric and categorical variables retrieved, and the geography level.</p></li>
@@ -277,7 +288,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">subset =</span> <span class="fu">c</span>(<span class="st">'1'</span>, <span class="st">'3'</span>)</span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 </ul>
-<p><strong>Query Census API with multiple years function:</strong></p>
+</section>
+<section id="multi-year-census-api-query-function" class="level3">
+<h3 class="anchored" data-anchor-id="multi-year-census-api-query-function"><strong>Multi-year Census API query function:</strong></h3>
 <ul>
 <li><p>This function allows users to request multiple years of survey data. One tibble containing all requested years is returned.</p></li>
 <li><p>Example usage:</p>
@@ -290,7 +303,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">subset=</span><span class="st">'18'</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 </ul>
-<p><strong>Summary function:</strong></p>
+</section>
+<section id="summary-function" class="level3">
+<h3 class="anchored" data-anchor-id="summary-function"><strong>Summary function:</strong></h3>
 <ul>
 <li><p>This function takes the data returned by query_pums() and returns the weighted mean and standard deviation for numeric variables, and weighted counts for categorical variables.</p></li>
 <li><p>The variable ‘PWGTP’ is used as the weight.</p></li>
@@ -302,7 +317,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify variables to be summarized from the 'census' tibble</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(census, <span class="at">num_vars =</span> <span class="fu">c</span>(<span class="st">'AGEP'</span>, <span class="st">'GASP'</span>), <span class="at">cat_vars =</span> <span class="st">'SEX'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 </ul>
-<p><strong>Plotting Function</strong></p>
+</section>
+<section id="plotting-function" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-function"><strong>Plotting Function:</strong></h3>
 <ul>
 <li><p>This function accepts one numeric variable and one categorical variable from the data returned by query_pums() and creates a boxplot.</p></li>
 <li><p>Example usage:</p>
@@ -311,6 +328,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
