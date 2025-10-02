@@ -9,7 +9,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-This notebook contains several functions that will allow users to query the Census API with their own inputs, and then explore the data through summary statistics. 
+This notebook contains several functions that will allow users to query the Census API with their own inputs, and then explore the data through summary statistics.
 
 ### Import necessary libraries
 
@@ -22,8 +22,10 @@ library(purrr)
 library(ggplot2)
 ```
 
+### Helper functions
 
-### Helper function to convert API request results to tibble
+#### Helper function to convert API request results to tibble
+
 ```{r}
 to_tibble <- function(request) {
   req <- fromJSON(rawToChar(request$content))
@@ -43,6 +45,7 @@ to_tibble <- function(request) {
 ```
 
 #### Helper function to parse and convert time values
+
 ```{r}
 parse_time <- function(time_string) {
   ts <- as.character(time_string)
@@ -67,8 +70,8 @@ parse_time <- function(time_string) {
 }
 ```
 
-
 #### Helper function to map JWAP and JWDP time codes to actual times
+
 ```{r}
 time_code_lookup <- function(data, var, year, parse_fun) {
   if (var %in% names(data)) {
@@ -80,7 +83,7 @@ time_code_lookup <- function(data, var, year, parse_fun) {
     # extract codes
     lookup <- meta$values$item
 
-    # pad codes with leading zeros to match lookup keys (3 digits)
+    # r removes leading zeros from codes, so add them back to match lookup keys (3 digits)
     padded_codes <- str_pad(data[[var]], width = 3, side = "left", pad = "0")
     data[[var]] <- lookup[padded_codes]
 
@@ -91,8 +94,8 @@ time_code_lookup <- function(data, var, year, parse_fun) {
 }
 ```
 
-
 ### Function to query the census API with user input
+
 ```{r}
 query_pums <- function(
     year = 2022,
@@ -206,9 +209,10 @@ query_pums <- function(
 }
 ```
 
-#### Test query_pums() function
+### Test query_pums() function
 
 Without sub-setting the geography level, this function is time consuming to run.
+
 ```{r}
 query_pums(
   year = 2022,
@@ -219,29 +223,32 @@ query_pums(
 )
 ```
 
-Verify that checks work correctly (commented out after testing so document can be rendered)
-Calling function with invalid year (outside of valid range):
+Verify that checks work correctly (commented out after testing so document can be rendered) Calling Function with invalid year (outside of valid range):
+
 ```{r}
 #query_pums(year = 2008)
 ```
 
 Calling function with invalid year (2020):
+
 ```{r}
 #query_pums(year = 2020)
 ```
 
 Calling function without 'PWGTP' variable:
+
 ```{r}
 #query_pums(year = 2022, num_vars = c('AGEP', 'JWAP'))
 ```
 
 Calling function without any categorical variables:
+
 ```{r}
 #query_pums(year = 2022, cat_vars = NULL)
 ```
 
+### Add function to specify multiple years of survey data
 
-### Add function to specify multiple years of survey data 
 ```{r}
 query_pums_multi <- function(
   years,
@@ -276,7 +283,8 @@ query_pums_multi <- function(
 }
 ```
 
-#### Test query_pums_multi() function
+### Test query_pums_multi() function
+
 ```{r}
 data <- query_pums_multi(
   years = c(2019, 2021, 2022),
@@ -290,21 +298,20 @@ data <- query_pums_multi(
 data |> count(year)
 ```
 
+Verify that checks for invalid years work (commented out after testing so document can be rendered) Calling function with year = 2020
 
-Verify that checks for invalid years work (commented out after testing so document can be rendered)
-Calling function with 2020
 ```{r}
 #query_pums_multi(years = c(2019, 2020))
 ```
 
 Calling function with years outside of 2010-2022 range
+
 ```{r}
 #query_pums_multi(years = c(2008, 2009))
 ```
 
- 
- 
 ### Function for Summarizing
+
 ```{r}
 summary.census <- function(
     tibble = tibble,
@@ -345,14 +352,15 @@ summary.census <- function(
   categorical <- lapply(cat_vars, function(v) {
     tibble |>
       group_by(.data[[v]]) |>
-      summarise(count = sum(weight), na.rm = TRUE)
+      summarise(count = sum(weight, na.rm = TRUE))
   })
   
   return(list(num_summary = numeric, cat_summary = categorical))
 }
 ```
 
-### Test out summary function
+### Test summary function
+
 ```{r}
 census <- query_pums(
   year = 2022,
@@ -361,10 +369,10 @@ census <- query_pums(
 )
 
 summary(census)
-
 ```
 
-### Create a plot for the census class table
+### Function to plot census data
+
 ```{r}
 plot.census <- function(
     tibble = tibble,
@@ -382,12 +390,61 @@ ggplot(tibble,
 
 return(census)
 
+plot_census <- function(tibble, cat_var, num_var) {
+  ggplot(tibble,
+         aes(x = get(cat_var), y = get(num_var), weight = PWGTP)) +
+    geom_boxplot() +
+    # Add axis labels
+    labs(x = cat_var, y = num_var)
+}
 ```
 
-### Test out plot function
+### Test plot function
+
+```{r}
+plot_census(census, cat_var = 'SEX', num_var = 'AGEP')
+```
+
+### Data investigation
+
+Query API:
+
+```{r}
+data <- query_pums(
+  year = 2022,
+  num_vars = c('AGEP', 'PWGTP', 'JWAP', 'JWDP', 'GASP', 'GRPIP', 'JWMNP'),
+  cat_vars = c('FER', 'HHL', 'HISPEED', 'JWTRNS', 'SCH', 'SCHL', 'SEX'),
+  geo_level = 'State',
+  subset='37'
+)
+```
+
+Plot of mode of transportation to work VS travel time to work:
+
+Discussion:
+
+-   Most of the boxplots have little to no lower tail and are right skewed (meaning more longer commute times than shorter)
+
+-   Car (1), walking (10), other (12), bus (2), taxi (7), bicycle (9) all have outliers around the same spot, just below 150 minutes
+
+-   Long-distance train or commuter rail (4) has no tails on either end of the box, and looks to have no upper quartile after the median.
+
+-   Commute time by car (1) has many outliers between 50-100 minutes, and has the most outliers out of any mode of transportation.
+
+-   Walking and biking have shorter commute times than I anticipated, especially compared to cars.
+
+-   Transportation mode = 6 is ferryboat, which is interesting that enough people commute to work by ferry for it to have its own category outside of 'other'
+
+JWTRNS = 0, 11: NA, worked from home
+
 ```{r}
 plot(census, num_var = "AGEP", cat_var = "SEX")
 ```
 
 
 ### Data investigation
+
+```{r}
+plot_census(data, cat_var = 'JWTRNS', num_var = 'JWMNP')
+```
+

@@ -195,13 +195,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#import-necessary-libraries" id="toc-import-necessary-libraries" class="nav-link active" data-scroll-target="#import-necessary-libraries">Import necessary libraries</a></li>
-  <li><a href="#helper-function-to-convert-api-request-results-to-tibble" id="toc-helper-function-to-convert-api-request-results-to-tibble" class="nav-link" data-scroll-target="#helper-function-to-convert-api-request-results-to-tibble">Helper function to convert API request results to tibble</a></li>
+  <li><a href="#helper-functions" id="toc-helper-functions" class="nav-link" data-scroll-target="#helper-functions">Helper functions</a></li>
   <li><a href="#function-to-query-the-census-api-with-user-input" id="toc-function-to-query-the-census-api-with-user-input" class="nav-link" data-scroll-target="#function-to-query-the-census-api-with-user-input">Function to query the census API with user input</a></li>
+  <li><a href="#test-query_pums-function" id="toc-test-query_pums-function" class="nav-link" data-scroll-target="#test-query_pums-function">Test query_pums() function</a></li>
   <li><a href="#add-function-to-specify-multiple-years-of-survey-data" id="toc-add-function-to-specify-multiple-years-of-survey-data" class="nav-link" data-scroll-target="#add-function-to-specify-multiple-years-of-survey-data">Add function to specify multiple years of survey data</a></li>
+  <li><a href="#test-query_pums_multi-function" id="toc-test-query_pums_multi-function" class="nav-link" data-scroll-target="#test-query_pums_multi-function">Test query_pums_multi() function</a></li>
   <li><a href="#function-for-summarizing" id="toc-function-for-summarizing" class="nav-link" data-scroll-target="#function-for-summarizing">Function for Summarizing</a></li>
-  <li><a href="#test-out-summary-function" id="toc-test-out-summary-function" class="nav-link" data-scroll-target="#test-out-summary-function">Test out summary function</a></li>
-  <li><a href="#create-a-plot-for-the-census-class-table" id="toc-create-a-plot-for-the-census-class-table" class="nav-link" data-scroll-target="#create-a-plot-for-the-census-class-table">Create a plot for the census class table</a></li>
-  <li><a href="#test-out-plot-function" id="toc-test-out-plot-function" class="nav-link" data-scroll-target="#test-out-plot-function">Test out plot function</a></li>
+  <li><a href="#test-summary-function" id="toc-test-summary-function" class="nav-link" data-scroll-target="#test-summary-function">Test summary function</a></li>
+  <li><a href="#function-to-plot-census-data" id="toc-function-to-plot-census-data" class="nav-link" data-scroll-target="#function-to-plot-census-data">Function to plot census data</a></li>
+  <li><a href="#test-plot-function" id="toc-test-plot-function" class="nav-link" data-scroll-target="#test-plot-function">Test plot function</a></li>
   <li><a href="#data-investigation" id="toc-data-investigation" class="nav-link" data-scroll-target="#data-investigation">Data investigation</a></li>
   </ul>
 </nav>
@@ -246,8 +248,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="helper-function-to-convert-api-request-results-to-tibble" class="level3">
-<h3 class="anchored" data-anchor-id="helper-function-to-convert-api-request-results-to-tibble">Helper function to convert API request results to tibble</h3>
+<section id="helper-functions" class="level3">
+<h3 class="anchored" data-anchor-id="helper-functions">Helper functions</h3>
+<section id="helper-function-to-convert-api-request-results-to-tibble" class="level4">
+<h4 class="anchored" data-anchor-id="helper-function-to-convert-api-request-results-to-tibble">Helper function to convert API request results to tibble</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>to_tibble <span class="ot">&lt;-</span> <span class="cf">function</span>(request) {</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  req <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">rawToChar</span>(request<span class="sc">$</span>content))</span>
@@ -265,6 +269,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(data)</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
 <section id="helper-function-to-parse-and-convert-time-values" class="level4">
 <h4 class="anchored" data-anchor-id="helper-function-to-parse-and-convert-time-values">Helper function to parse and convert time values</h4>
 <div class="cell">
@@ -304,7 +309,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># extract codes</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    lookup <span class="ot">&lt;-</span> meta<span class="sc">$</span>values<span class="sc">$</span>item</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># pad codes with leading zeros to match lookup keys (3 digits)</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># r removes leading zeros from codes, so add them back to match lookup keys (3 digits)</span></span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    padded_codes <span class="ot">&lt;-</span> <span class="fu">str_pad</span>(data[[var]], <span class="at">width =</span> <span class="dv">3</span>, <span class="at">side =</span> <span class="st">"left"</span>, <span class="at">pad =</span> <span class="st">"0"</span>)</span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    data[[var]] <span class="ot">&lt;-</span> lookup[padded_codes]</span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
@@ -430,8 +435,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(data)</span>
 <span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="test-query_pums-function" class="level4">
-<h4 class="anchored" data-anchor-id="test-query_pums-function">Test query_pums() function</h4>
+</section>
+<section id="test-query_pums-function" class="level3">
+<h3 class="anchored" data-anchor-id="test-query_pums-function">Test query_pums() function</h3>
 <p>Without sub-setting the geography level, this function is time consuming to run.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">query_pums</span>(</span>
@@ -458,7 +464,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 # ℹ 69,833 more rows</code></pre>
 </div>
 </div>
-<p>Verify that checks work correctly (commented out after testing so document can be rendered) Calling function with invalid year (outside of valid range):</p>
+<p>Verify that checks work correctly (commented out after testing so document can be rendered) Calling Function with invalid year (outside of valid range):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#query_pums(year = 2008)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -474,7 +480,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#query_pums(year = 2022, cat_vars = NULL)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
 </section>
 <section id="add-function-to-specify-multiple-years-of-survey-data" class="level3">
 <h3 class="anchored" data-anchor-id="add-function-to-specify-multiple-years-of-survey-data">Add function to specify multiple years of survey data</h3>
@@ -511,8 +516,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="test-query_pums_multi-function" class="level4">
-<h4 class="anchored" data-anchor-id="test-query_pums_multi-function">Test query_pums_multi() function</h4>
+</section>
+<section id="test-query_pums_multi-function" class="level3">
+<h3 class="anchored" data-anchor-id="test-query_pums_multi-function">Test query_pums_multi() function</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">query_pums_multi</span>(</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">years =</span> <span class="fu">c</span>(<span class="dv">2019</span>, <span class="dv">2021</span>, <span class="dv">2022</span>),</span>
@@ -533,7 +539,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 3  2022 69843</code></pre>
 </div>
 </div>
-<p>Verify that checks for invalid years work (commented out after testing so document can be rendered) Calling function with 2020</p>
+<p>Verify that checks for invalid years work (commented out after testing so document can be rendered) Calling function with year = 2020</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#query_pums_multi(years = c(2019, 2020))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -541,7 +547,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#query_pums_multi(years = c(2008, 2009))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
 </section>
 <section id="function-for-summarizing" class="level3">
 <h3 class="anchored" data-anchor-id="function-for-summarizing">Function for Summarizing</h3>
@@ -585,15 +590,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>  categorical <span class="ot">&lt;-</span> <span class="fu">lapply</span>(cat_vars, <span class="cf">function</span>(v) {</span>
 <span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>    tibble <span class="sc">|&gt;</span></span>
 <span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(.data[[v]]) <span class="sc">|&gt;</span></span>
-<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">sum</span>(weight), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">sum</span>(weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
 <span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>  })</span>
 <span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">num_summary =</span> numeric, <span class="at">cat_summary =</span> categorical))</span>
 <span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="test-out-summary-function" class="level3">
-<h3 class="anchored" data-anchor-id="test-out-summary-function">Test out summary function</h3>
+<section id="test-summary-function" class="level3">
+<h3 class="anchored" data-anchor-id="test-summary-function">Test summary function</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>census <span class="ot">&lt;-</span> <span class="fu">query_pums</span>(</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2022</span>,</span>
@@ -610,35 +615,80 @@ sd   23.40716 178.11080
 
 $cat_summary
 $cat_summary[[1]]
-# A tibble: 2 × 3
-  SEX     count na.rm
-  &lt;fct&gt;   &lt;dbl&gt; &lt;lgl&gt;
-1 1     6833037 TRUE 
-2 2     6833037 TRUE 
+# A tibble: 2 × 2
+  SEX     count
+  &lt;fct&gt;   &lt;dbl&gt;
+1 1     6833037
+2 2     6833037
 
 $cat_summary[[2]]
-# A tibble: 3 × 3
-  HISPEED   count na.rm
-  &lt;fct&gt;     &lt;dbl&gt; &lt;lgl&gt;
-1 0       6833037 TRUE 
-2 1       6833037 TRUE 
-3 2       6833037 TRUE </code></pre>
+# A tibble: 3 × 2
+  HISPEED   count
+  &lt;fct&gt;     &lt;dbl&gt;
+1 0       6833037
+2 1       6833037
+3 2       6833037</code></pre>
 </div>
 </div>
 </section>
-<section id="create-a-plot-for-the-census-class-table" class="level3">
-<h3 class="anchored" data-anchor-id="create-a-plot-for-the-census-class-table">Create a plot for the census class table</h3>
+<section id="function-to-plot-census-data" class="level3">
+<h3 class="anchored" data-anchor-id="function-to-plot-census-data">Function to plot census data</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ggplot(census, </span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>       <span class="co">#aes(x = get(cat_vars, y = get(num_vars, weight = PWGTP)) +</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>             <span class="co">#geom_boxplot())</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>plot_census <span class="ot">&lt;-</span> <span class="cf">function</span>(tibble, cat_var, num_var) {</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(tibble,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">get</span>(cat_var), <span class="at">y =</span> <span class="fu">get</span>(num_var), <span class="at">weight =</span> PWGTP)) <span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add axis labels</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> cat_var, <span class="at">y =</span> num_var)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="test-out-plot-function" class="level3">
-<h3 class="anchored" data-anchor-id="test-out-plot-function">Test out plot function</h3>
+<section id="test-plot-function" class="level3">
+<h3 class="anchored" data-anchor-id="test-plot-function">Test plot function</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_census</span>(census, <span class="at">cat_var =</span> <span class="st">'SEX'</span>, <span class="at">num_var =</span> <span class="st">'AGEP'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_processing_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="data-investigation" class="level3">
 <h3 class="anchored" data-anchor-id="data-investigation">Data investigation</h3>
+<p>Query API:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">query_pums</span>(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2022</span>,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_vars =</span> <span class="fu">c</span>(<span class="st">'AGEP'</span>, <span class="st">'PWGTP'</span>, <span class="st">'JWAP'</span>, <span class="st">'JWDP'</span>, <span class="st">'GASP'</span>, <span class="st">'GRPIP'</span>, <span class="st">'JWMNP'</span>),</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cat_vars =</span> <span class="fu">c</span>(<span class="st">'FER'</span>, <span class="st">'HHL'</span>, <span class="st">'HISPEED'</span>, <span class="st">'JWTRNS'</span>, <span class="st">'SCH'</span>, <span class="st">'SCHL'</span>, <span class="st">'SEX'</span>),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">geo_level =</span> <span class="st">'State'</span>,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">subset=</span><span class="st">'37'</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Plot of mode of transportation to work VS travel time to work:</p>
+<p>Discussion:</p>
+<ul>
+<li><p>Most of the boxplots have little to no lower tail and are right skewed (meaning more longer commute times than shorter)</p></li>
+<li><p>Car (1), walking (10), other (12), bus (2), taxi (7), bicycle (9) all have outliers around the same spot, just below 150 minutes</p></li>
+<li><p>Long-distance train or commuter rail (4) has no tails on either end of the box, and looks to have no upper quartile after the median.</p></li>
+<li><p>Commute time by car (1) has many outliers between 50-100 minutes, and has the most outliers out of any mode of transportation.</p></li>
+<li><p>Walking and biking have shorter commute times than I anticipated, especially compared to cars.</p></li>
+<li><p>Transportation mode = 6 is ferryboat, which is interesting that enough people commute to work by ferry for it to have its own category outside of ‘other’</p></li>
+</ul>
+<p>JWTRNS = 0, 11: NA, worked from home</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_census</span>(data, <span class="at">cat_var =</span> <span class="st">'JWTRNS'</span>, <span class="at">num_var =</span> <span class="st">'JWMNP'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_processing_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
 </section>
