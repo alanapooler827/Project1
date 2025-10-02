@@ -372,7 +372,7 @@ plot.census <- function(
     cat_vars = NULL
 )
 ggplot(tibble,
- aes(x = get(cat_var, y = get(num_var), weight = PWGTP)) +
+ aes(x = get(cat_var), y = get(num_var), weight = PWGTP)) +
  geom_boxplot() +
    labs(
  title = paste("Weighted Boxplot of", num_var, "by", cat_var),
@@ -381,14 +381,13 @@ ggplot(tibble,
 )
 
 return(census)
-}
+
 ```
 
 ### Test out plot function
 ```{r}
 plot(census, num_var = "AGEP", cat_var = "SEX")
 ```
-
 
 
 ### Data investigation
