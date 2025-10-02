@@ -6,7 +6,7 @@ toc: TRUE
 
 ## Project Components
 
-### Helper functions:
+### Helper functions
 
 **Tibble helper function:**
 
@@ -38,7 +38,7 @@ toc: TRUE
 
 -   Example: given "258" for the variable "JWAP", code_lookup() will return the string "9:40 p.m. to 9:44 p.m."
 
-### **Query Census API function:**
+### Query Census API function:
 
 -   This function allows the user to query the PUMS API with their own inputs.
 
@@ -73,7 +73,7 @@ toc: TRUE
     )
     ```
 
-### **Multi-year Census API query function:**
+### Multi-year Census API query function
 
 -   This function allows users to request multiple years of survey data. One tibble containing all requested years is returned.
 
@@ -90,7 +90,7 @@ toc: TRUE
     )
     ```
 
-### **Summary function:**
+### Summary function
 
 -   This function takes the data returned by query_pums() and returns the weighted mean and standard deviation for numeric variables, and weighted counts for categorical variables.
 
@@ -108,7 +108,7 @@ toc: TRUE
     summary(census, num_vars = c('AGEP', 'GASP'), cat_vars = 'SEX')
     ```
 
-### **Plotting Function:**
+### Plotting Function
 
 -   This function accepts one numeric variable and one categorical variable from the data returned by query_pums() and creates a boxplot.
 
